@@ -1,5 +1,8 @@
 name: Generate DarkFi Book
 
+env:
+  RUST_TOOLCHAIN: "nightly-2024-07-07"
+
 on:
     push:
         branches:
@@ -16,21 +19,21 @@ jobs:
                 fetch-depth: 0
 
             - name: Install Python
-              uses: actions/setup-python@v1
+              uses: actions/setup-python@v5.3.0
               with:
                 python-version: 3.9
 
             - name: Install Rust (nightly)
               uses: actions-rs/toolchain@v1
               with:
-                toolchain: nightly-2024-07-07
+                toolchain: ${RUST_TOOLCHAIN}
                 components: rustfmt, clippy
                 override: true
 
             - name: Install Rust (wasm32)
               uses: actions-rs/toolchain@v1
               with:
-                toolchain: nightly-2024-07-07
+                toolchain: ${RUST_TOOLCHAIN}
                 target: wasm32-unknown-unknown
                 override: true
 
@@ -56,7 +59,7 @@ jobs:
                 git config --local user.email "41898282+github-actions[bot]@users.noreply.github.com"
                 git config --local user.name "bookworm"
                 cd doc
-                make CARGO="cargo +nightly-2024-07-07" github
+                make CARGO="cargo +${RUST_TOOLCHAIN}" github
                 git checkout gh-pages
 
             - name: Push changes
